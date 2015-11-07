@@ -1,6 +1,7 @@
 package com;
 
 import com.org.dfhu.rudb.RuDb;
+import com.org.dfhu.rudb.TestRow;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.server.Page;
@@ -35,12 +36,8 @@ public class MyVaadinApplication extends UI {
         saveButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                Connection connection;
-                try {
-                    connection = RuDb.getDbPool().reserveConnection();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                TestRow result = RuDb.first(RuDb.Tables.TEST, "1 = 1");
+                Notification.show(result.toString());
             }
         });
         mainLayout.addComponent(saveButton);
