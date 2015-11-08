@@ -2,7 +2,7 @@ package com.org.dfhu.rudb;
 
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.ui.Notification;
-import junit.framework.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,10 +11,6 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class RuDb {
-
-    public static class Tables {
-        public static final String TEST = "test";
-    }
 
     private static SimpleJDBCConnectionPool pool = getDbPool();
 
@@ -41,24 +37,33 @@ public class RuDb {
      * @param where where clause without the leading "WHERE"
      * @return first value
      */
-    public static TestRow first(String table, String where) {
+     protected static ResultSet getFirstResultSet(String table, String where) {
         String sql = "SELECT * FROM " + table + " WHERE " + where + " LIMIT 1";
         try {
             Connection connection = getDbPool().reserveConnection();
             Statement stmt = connection.createStatement();
             ResultSet results = stmt.executeQuery(sql);
             boolean result = results.next();
-            TestRow row = new TestRow();
             if (!result) {
-                return row;
+                return null;
             }
-            row.kk = results.getString("kk");
-            row.vv = results.getString("vv");
-            return row;
+            return results;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("Runtime SQL Exception: " + e.getMessage());
         }
+    }
+
+    protected String getTableName () {
+        throw new NotImplementedException();
+    }
+    protected IRow populateRow (ResultSet results) {
+        throw new NotImplementedException();
+    }
+
+    public IRow first(String where) {
+        ResultSet results = getFirstResultSet(getTableName(), "1 = 1");
+        return this.populateRow(results);
     }
 }

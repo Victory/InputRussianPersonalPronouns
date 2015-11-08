@@ -1,6 +1,6 @@
 package com.org.dfhu.rudb;
 
-public class TestRow {
+public class TestRow implements IRow {
     String kk;
     String vv;
 
